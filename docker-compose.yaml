@@ -1,0 +1,35 @@
+services:
+  redis:
+    image: redis/redis-stack-server@sha256:798ab84d9f266936b034ab11c4d04a2b8e4b441884c5aa7d17ac951eefdf742a
+    container_name: rtstest
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  redisinsight:
+    image: redis/redisinsight:latest
+    container_name: redisinsight
+    restart: unless-stopped
+    ports:
+      - "5540:5540"
+    depends_on:
+      - redis
+
+  dev-window:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev.ubuntu
+    container_name: dev-window
+    restart: unless-stopped
+    volumes:
+      - .:/app
+    working_dir: /app
+    tty: true
+    stdin_open: true
+    environment:
+      REDIS_HOST: redis
+
+volumes:
+  redis_data: {}

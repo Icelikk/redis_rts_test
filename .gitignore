@@ -1,0 +1,21 @@
+# build artifacts
+/build/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# logs/pids
+*.log
+*.pid
+/tmp/
+nohup.out
+
+# IDE
+.vscode/
+.idea/
+
+# 
+.DS_Store
+
+redis_data/

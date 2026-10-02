@@ -1,0 +1,29 @@
+FROM ubuntu:24.04
+USER root
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential cmake git pkg-config ca-certificates \
+    redis-tools \
+ && rm -rf /var/lib/apt/lists/*
+
+# hiredis (через CMake install, чтобы появился hiredisConfig.cmake)
+RUN git clone --depth 1 https://github.com/redis/hiredis.git /tmp/hiredis \
+ && cmake -S /tmp/hiredis -B /tmp/hiredis/build -DCMAKE_BUILD_TYPE=Release \
+ && cmake --build /tmp/hiredis/build -j"$(nproc)" \
+ && cmake --install /tmp/hiredis/build \
+ && rm -rf /tmp/hiredis
+
+# redis-plus-plus (redis++)
+RUN git clone --depth 1 https://github.com/sewenew/redis-plus-plus.git /tmp/redis-plus-plus \
+ && cmake -S /tmp/redis-plus-plus -B /tmp/redis-plus-plus/build \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DREDIS_PLUS_PLUS_BUILD_TEST=OFF \
+      -DREDIS_PLUS_PLUS_BUILD_SHARED=ON \
+ && cmake --build /tmp/redis-plus-plus/build -j"$(nproc)" \
+ && cmake --install /tmp/redis-plus-plus/build \
+ && rm -rf /tmp/redis-plus-plus
+
+ENV CMAKE_PREFIX_PATH=/usr/local
+WORKDIR /app

@@ -1,0 +1,10 @@
+FROM registry.astralinux.ru/library/astra/ubi18-redis7015:1.8.5
+USER root
+
+RUN mkdir -p /usr/lib/redis/modules
+
+COPY --from=redis/redis-stack-server@sha256:798ab84d9f266936b034ab11c4d04a2b8e4b441884c5aa7d17ac951eefdf742a \
+  /opt/redis-stack/lib/redistimeseries.so \
+  /usr/lib/redis/modules/redistimeseries.so
+
+RUN chmod 755 /usr/lib/redis/modules/redistimeseries.so
