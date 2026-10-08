@@ -196,14 +196,56 @@ ssh -N -L 5550:127.0.0.1:5540 <user>@<server_ip>
 Открыть в браузере на локальном ПК: <http://localhost:5550>
 
 Дальше в RedisInsight добавляешь базу так же:
+<img width="1005" height="770" alt="изображение" src="https://github.com/user-attachments/assets/4576f144-7acb-4fff-bf90-bd5acc17673b" />
 
 - **Host:** `redis`
 - **Port:** `6379`
 
 > Если локальный порт `5540` занят — используй `5550` (или любой свободный).
 
----
+## Как смотреть RTS (RedisTimeSeries) в RedisInsight
 
+В некоторых версиях RedisInsight TimeSeries не всегда красиво рисуется “как график” прямо в Browser, поэтому самый надёжный способ — смотреть точки через **Workbench / CLI**.
+
+### Открой Workbench
+В RedisInsight:
+- выбери подключённую базу Redis
+- перейди во вкладку **Workbench** (или **CLI** — название зависит от версии)
+---
+### Модуль TimeSeries загружен
+
+```redis
+MODULE LIST
+```
+
+### Информация по raw-ряду (пример для `tag=0`)
+
+```redis
+TS.INFO ts:raw:0
+```
+
+### Последние 10 точек из raw
+
+```redis
+TS.REVRANGE ts:raw:0 - + COUNT 10
+```
+
+### Последние 30 точек агрегата 20 секунд
+
+```redis
+TS.REVRANGE ts:avg:20s:0 - + COUNT 30
+TS.REVRANGE ts:min:20s:0 - + COUNT 30
+TS.REVRANGE ts:max:20s:0 - + COUNT 30
+TS.REVRANGE ts:cnt:20s:0 - + COUNT 30
+```
+<img width="1851" height="905" alt="изображение" src="https://github.com/user-attachments/assets/831a155f-3971-4138-bcec-d4d22e61cb8d" />
+
+### Последние 30 точек агрегата 1 минута
+
+```redis
+TS.REVRANGE ts:avg:1m:0 - + COUNT 30
+TS.REVRANGE ts:cnt:1m:0 - + COUNT 30
+```
 ## Важные ключи в Redis 
 
 ### Stream
