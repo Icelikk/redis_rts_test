@@ -103,6 +103,7 @@ docker compose exec dev-window bash
 **Сборка (внутри `dev-window`):**
 
 ```bash
+mkdir build
 cd /app/build
 cmake ..
 make -j$(nproc)
