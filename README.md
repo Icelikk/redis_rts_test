@@ -85,7 +85,22 @@ cd redis_rts_test
 docker compose up -d --build
 docker compose ps 
 ```
+## Если ошибка: `failed to bind host port 0.0.0.0:6379 ... address already in use`
 
+**Что это значит:**
+
+На хосте уже работает Redis (или другой сервис) и занял порт `6379`, поэтому Docker не может пробросить `6379:6379`.
+
+**Решение 1 — поменять проброс порта Redis в `docker-compose.yaml`:**
+
+```yaml
+services:
+  redis:
+    ports:
+      - "6380:6379"
+```
+
+**Решение 2 — вообще убрать проброс `6379` наружу**, если Redis с хоста не нужен: просто удалить из `docker-compose.yaml` строку в секции `ports`.
 ### 3) Зайти в dev-контейнер
 
 Все сборки и скрипты запускаются внутри dev-контейнера :
