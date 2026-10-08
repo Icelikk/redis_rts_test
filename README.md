@@ -125,14 +125,6 @@ ls -la /app/build/loader /app/build/worker
 /app/script/run.sh
 ```
 
-**Логи:**
-
-```bash
-tail -n 80 /tmp/loader.log
-tail -n 80 /tmp/worker.log
-```
-
----
 
 ## Быстрые команды проверки (внутри `dev-window`)
 
